@@ -32,7 +32,7 @@ import yaml
 from PIL.ImageDraw import ImageDraw
 from PIL import ImageFont
 
-YEAR = 2024
+YEAR = 2025
 
 # This results in the parent directory of the script directory, the year directories should be here
 SOURCE_CODE_DIR = Path(__file__).absolute().parent.parent
