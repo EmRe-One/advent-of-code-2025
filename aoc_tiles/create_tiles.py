@@ -174,11 +174,11 @@ def find_recursive_solution_files(directory: Path) -> list[Path]:
             solution_paths.append(path)
     return solution_paths
 
-
-def parse_leaderboard(leaderboard_path: Path) -> dict[int, DayScores]:
+def parse_old_leaderboard(leaderboard_path: Path) -> dict[int, DayScores]:
     no_stars = "You haven't collected any stars... yet."
     start = '<span class="leaderboard-daydesc-both"> *Time *Rank *Score</span>\n'
     end = "</pre>"
+
     with open(leaderboard_path) as file:
         html = file.read()
         if no_stars in html:
@@ -195,6 +195,33 @@ def parse_leaderboard(leaderboard_path: Path) -> dict[int, DayScores]:
             leaderboard[int(day)] = DayScores(*scores)
         return leaderboard
 
+def parse_modern_leaderboard(leaderboard_path: Path) -> dict[int, DayScores]:
+    no_stars = "You haven't collected any stars... yet."
+    start = '<span class="leaderboard-daydesc-both"> *-Part 2-</span>\n'
+    end = "</pre>"
+
+    with open(leaderboard_path) as file:
+        html = file.read()
+        if no_stars in html:
+            return {}
+        matches = re.findall(rf"{start}(.*?){end}", html, re.DOTALL | re.MULTILINE)
+        assert len(matches) == 1, f"Found {'no' if len(matches) == 0 else 'more than one'} leaderboard?!"
+        table_rows = matches[0].strip().split("\n")
+        leaderboard = {}
+        for line in table_rows:
+            day, *scores = re.split(r"\s+", line.strip())
+            # replace "-" with None to be able to handle the data later, like if no score existed for the day
+            scores = [s if s != "-" else None for s in scores]
+            assert len(scores) in (1, 2), f"Number scores for {day=} ({scores}) are not 1 or 2."
+            leaderboard[int(day)] = DayScores(scores[0], "1", "1", scores[1], "1", "1")
+
+        return leaderboard
+
+def parse_leaderboard(leaderboard_path: Path) -> dict[int, DayScores]:
+    if YEAR < 2025:
+        return parse_old_leaderboard(leaderboard_path)
+
+    return parse_modern_leaderboard(leaderboard_path)
 
 def request_leaderboard(year: int) -> dict[int, DayScores]:
     leaderboard_path = CACHE_DIR / f"leaderboard{year}.html"
@@ -213,7 +240,7 @@ def request_leaderboard(year: int) -> dict[int, DayScores]:
         assert len(session_cookie) == 128, f"Session cookie is not 128 characters long, make sure to remove the prefix!"
         data = requests.get(
             PERSONAL_LEADERBOARD_URL.format(year=year),
-            headers={"User-Agent": "https://github.com/LiquidFun/adventofcode by Brutenis Gliwa"},
+            headers={"User-Agent": "Create Tiles Script"},
             cookies={"session": session_cookie},
         ).text
         leaderboard_path.parent.mkdir(exist_ok=True, parents=True)
