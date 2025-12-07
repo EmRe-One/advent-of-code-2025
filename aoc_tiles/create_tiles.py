@@ -213,7 +213,7 @@ def parse_modern_leaderboard(leaderboard_path: Path) -> dict[int, DayScores]:
             # replace "-" with None to be able to handle the data later, like if no score existed for the day
             scores = [s if s != "-" else None for s in scores]
             assert len(scores) in (1, 2), f"Number scores for {day=} ({scores}) are not 1 or 2."
-            leaderboard[int(day)] = DayScores(scores[0], "1", "1", scores[1], "1", "1")
+            leaderboard[int(day)] = DayScores(scores[0], "/", "/", scores[1], "/", "/")
 
         return leaderboard
 
