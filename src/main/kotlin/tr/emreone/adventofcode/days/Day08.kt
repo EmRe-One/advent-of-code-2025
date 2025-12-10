@@ -32,7 +32,7 @@ class Day08 : Day(
             .map { (a, b) -> (a to b) to (b - a).length()  }
             .sortedBy { it.second }
             .take(compareFirstNCircuits)
-            .forEach { (p, d) ->
+            .forEach { (p, _) ->
                 val firstSet = circuits.indexOfFirst { it.contains(p.first) }
                 val secondSet = circuits.indexOfFirst { it.contains(p.second) }
                 if (firstSet != secondSet) {
@@ -57,7 +57,7 @@ class Day08 : Day(
             .combinations(2)
             .map { (a, b) -> (a to b) to (b - a).length()  }
             .sortedBy { it.second }
-            .takeWhile { (p, d) ->
+            .takeWhile { (p, _) ->
                 val firstSet = circuits.indexOfFirst { it.contains(p.first) }
                 val secondSet = circuits.indexOfFirst { it.contains(p.second) }
                 if (firstSet != secondSet) {
