@@ -1,4 +1,4 @@
-package tr.emreone.adventofcode
+package tr.emreone.adventofcode25
 
 import java.util.concurrent.ConcurrentHashMap
 

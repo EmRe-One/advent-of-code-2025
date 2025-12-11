@@ -4,7 +4,7 @@ plugins {
     application
 }
 
-group = "tr.emreone.adventofcode"
+group = "tr.emreone.adventofcode25"
 version = "2025"
 
 repositories {
@@ -60,8 +60,6 @@ dependencies {
     implementation("com.github.ajalt.mordant:mordant:2.2.0")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.2")
 
-    // implementation("tr.emreone:kotlin-utils:0.4.0")
-    // implementation("com.github.EmRe-One:Kotlin-Utils:master-SNAPSHOT")
     implementation("com.github.EmRe-One:Kotlin-Utils:0.4.1")
 
     testImplementation(kotlin("test"))
@@ -88,7 +86,7 @@ tasks.register("prepareNextDay") {
 
     doFirst {
         day = properties["day"]?.toString()?.toInt() ?: 0
-        packageId = properties["packageId"]?.toString() ?: "tr.emreone.adventofcode"
+        packageId = properties["packageId"]?.toString() ?: "tr.emreone.adventofcode25"
     }
 
     doLast {

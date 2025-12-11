@@ -1,4 +1,4 @@
-package tr.emreone.adventofcode.days
+package tr.emreone.adventofcode25.days
 
 import tr.emreone.kotlin_utils.Resources
 import tr.emreone.kotlin_utils.automation.Day
@@ -62,7 +62,7 @@ class Day10 : Day(
                 if (currentPresses + maxRemainder >= minTotalPresses) return
 
                 // if all buttons pressed and remainder is exactly 0,
-                // targetJoltage reached :D
+                // targetJoltage reached
                 if (buttonIndex == buttons.size) {
                     if (maxRemainder == 0) {
                         minTotalPresses = currentPresses
@@ -208,12 +208,10 @@ class Day10 : Day(
     // ============        Helper methods for part II          ============
     // ====================================================================
 
-    fun solveMathematical(manual: Manual, manualId: Int): Long {
+    private fun solveMathematical(manual: Manual, manualId: Int): Long {
         val numEquations = manual.targetJoltages.size
         val numVars = manual.buttons.size
 
-        // Wir suchen eine 'Basis-Lösung'.
-        // Wenn wir 10 Gleichungen haben, brauchen wir meist 10 Knöpfe.
         val rank = numEquations.coerceAtMost(numVars)
 
         var minTotalPresses = Long.MAX_VALUE
@@ -324,12 +322,6 @@ class Day10 : Day(
             totalPresses += rounded
         }
 
-        // --- SCHLUSS-VALIDIERUNG ---
-        // Das fehlte vorher vielleicht:
-        // Wir müssen prüfen, ob diese Drücke auch ALLE anderen Gleichungen erfüllen
-        // (falls wir nur eine Teilmenge der Gleichungen für die Matrix genutzt haben)
-
-        // Array mit Anzahl Drücken pro Knopf (Index in manual.buttons)
         val pressesPerButton = LongArray(manual.buttons.size)
         for (i in 0 until matrixSize) {
             pressesPerButton[selectedIndices[i]] = solution[i].roundToLong()
@@ -344,8 +336,6 @@ class Day10 : Day(
                 }
             }
             if (currentJoltage.toInt() != manual.targetJoltages[targetIdx]) {
-                // Die Lösung funktioniert für die gewählte Sub-Matrix,
-                // aber verletzt eine andere Bedingung.
                 return -1L
             }
         }

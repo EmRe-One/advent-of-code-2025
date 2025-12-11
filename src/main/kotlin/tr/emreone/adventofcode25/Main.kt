@@ -1,4 +1,4 @@
-package tr.emreone.adventofcode
+package tr.emreone.adventofcode25
 
 import com.github.ajalt.mordant.rendering.TextColors
 import com.github.ajalt.mordant.terminal.Terminal

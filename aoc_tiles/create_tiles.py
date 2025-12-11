@@ -47,7 +47,7 @@ README_PATH = SOURCE_CODE_DIR / "README.md"
 # Path to the cookie session file
 SESSION_COOKIE_PATH = SOURCE_CODE_DIR / "src/main/resources/session.cookie"
 
-DAY_IMPLEMENTATION_DIR = SOURCE_CODE_DIR / "src/main/kotlin/tr/emreone/adventofcode/days"
+DAY_IMPLEMENTATION_DIR = SOURCE_CODE_DIR / "src/main/kotlin/tr/emreone/adventofcode25/days"
 
 # Whether the graphic should be created for days that have not been completed yet.
 # Note that missing days between completed days will still be created.

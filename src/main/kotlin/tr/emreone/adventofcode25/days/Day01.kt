@@ -1,9 +1,8 @@
-package tr.emreone.adventofcode.days
+package tr.emreone.adventofcode25.days
 
 import tr.emreone.kotlin_utils.Logger
 import tr.emreone.kotlin_utils.Resources
 import tr.emreone.kotlin_utils.automation.Day
-import kotlin.math.abs
 
 class Day01 : Day(
     1,
@@ -11,7 +10,6 @@ class Day01 : Day(
     "Secret Entrance",
     session = Resources.resourceAsString("session.cookie")
 ) {
-    val log = Logger.logger
 
     override fun part1(): Int {
         var currentPosition = 50
