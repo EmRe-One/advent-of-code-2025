@@ -2,6 +2,8 @@ package tr.emreone.adventofcode25.days
 
 import tr.emreone.kotlin_utils.Resources
 import tr.emreone.kotlin_utils.automation.Day
+import kotlin.collections.mutableMapOf
+import kotlin.text.get
 
 class Day11 : Day(
     11,
@@ -21,33 +23,39 @@ class Day11 : Day(
         }
     }
 
+    class Reactor(
+        val nodes: Map<String, Node>
+    ) {
+        private val cache = mutableMapOf<Pair<String, String>, Long>()
+
+        init {
+            cache.clear()
+        }
+
+        fun countPaths(src: String, dst: String): Long {
+            if (cache.containsKey(src to dst)) {
+                return cache[src to dst]!!
+            }
+            if (src == dst) {
+                return 1L
+            }
+            val sum = nodes[src]?.adjacent?.sumOf { neighbor ->
+                countPaths(neighbor, dst)
+            } ?: 0L
+            cache[src to dst] = sum
+            return sum
+        }
+    }
+
     override fun part1(): Int {
         val nodes = inputAsList.associate {
             val node = Node.of(it)
             node.name to node
         }
 
-        val possiblePaths = mutableSetOf<List<Node>>()
-        fun traverse(currentNodeName: String, path: List<Node> = listOf()) {
-            if (currentNodeName == "out") {
-                possiblePaths.add(path)
-                return
-            }
+        val reactor = Reactor(nodes)
 
-            val currentNode = nodes[currentNodeName]!!
-            if (currentNode in path) {
-                println("WARNING: Block recursive call, because ${currentNode.name} is already in path. Loop detected!!")
-                return
-            }
-
-            for (n in currentNode.adjacent) {
-                val newPath = path + currentNode
-                traverse(n, newPath)
-            }
-        }
-
-        traverse("you")
-        return possiblePaths.size
+        return reactor.countPaths("you", "out").toInt()
     }
 
     override fun part2(): Long {
@@ -55,39 +63,19 @@ class Day11 : Day(
             val node = Node.of(it)
             node.name to node
         }
-        var validPathCount = 0L
+        val reactor = Reactor(nodes)
 
-        val currentPathVisited = mutableSetOf<String>()
+        return reactor.run {
+            val a = countPaths("svr", "dac")
+                .times(countPaths("dac", "fft"))
+                .times(countPaths("fft", "out"))
 
-        fun traverse(currentNodeName: String, seenFft: Boolean, seenDac: Boolean) {
-            if (currentNodeName == "out") {
-                if (seenFft && seenDac) {
-                    validPathCount++
-                    if (validPathCount % 1_000_000 == 0L) println("Bereits $validPathCount Pfade gefunden...")
-                }
-                return
-            }
+            val b = countPaths("svr", "fft")
+                .times(countPaths("fft", "dac"))
+                .times(countPaths("dac", "out"))
 
-            val currentNode = nodes[currentNodeName] ?: return
-
-            if (currentNodeName in currentPathVisited) {
-                return
-            }
-
-            currentPathVisited.add(currentNodeName)
-
-            val nowSeenFft = seenFft || (currentNodeName == "fft")
-            val nowSeenDac = seenDac || (currentNodeName == "dac")
-
-            for (neighbor in currentNode.adjacent) {
-                traverse(neighbor, nowSeenFft, nowSeenDac)
-            }
-
-            currentPathVisited.remove(currentNodeName)
+            a + b
         }
-        
-        traverse("svr", seenFft = false, seenDac = false)
-        return validPathCount
     }
 
 }
